@@ -1,6 +1,17 @@
 from google.adk.agents import LlmAgent, SequentialAgent
 from google.adk.tools import google_search
 from .config import config
+from .openrouter_model import get_openrouter_client, is_openrouter_model
+
+# Check if we're using OpenRouter and initialize client
+if config.model_provider == 'openrouter' and config.openrouter_config:
+    openrouter_client = get_openrouter_client()
+    # Test the connection
+    if openrouter_client.test_connection():
+        print(f"🚀 Using OpenRouter model: {config.openrouter_config['model']}")
+    else:
+        print("⚠️ OpenRouter connection failed, falling back to Gemini")
+        config.model_provider = 'google'  # Fallback
 
 # Sub agent 01: Scriptwriter Agent (with Google Search capability)
 scriptwriter_agent = LlmAgent(
