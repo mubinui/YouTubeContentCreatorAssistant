@@ -1,12 +1,13 @@
 from google.adk.agents import LlmAgent
+from google.adk.tools import google_search
 from .config import config
 
-# Sub agent 01: Scriptwriter Agent (without tools for now)
+# Sub agent 01: Scriptwriter Agent (now with search tools)
 scriptwriter_agent = LlmAgent(
     name="scriptwriter_agent",
     model=config.model_config['name'],
     instruction=config.load_instruction_from_file("scriptwriter_agent.txt"),
-    tools=[],  # Empty tools list until proper tools are available
+    tools=[google_search],  # Using the existing google_search tool
     output_key="generated_script" # for saving results to state
 )
 
