@@ -1,0 +1,9 @@
+[project]
+name = "mcp"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.9"
+dependencies = [
+    "adk>=0.0.5",
+    "cachetools==6.2.0",
+]
