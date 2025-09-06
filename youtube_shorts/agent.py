@@ -1,11 +1,13 @@
 from google.adk.agents import LlmAgent, SequentialAgent
+from google.adk.tools import google_search
 from .config import config
 
-# Sub agent 01: Scriptwriter Agent (without search - uses knowledge and creativity)
+# Sub agent 01: Scriptwriter Agent (with Google Search capability)
 scriptwriter_agent = LlmAgent(
     name="scriptwriter_agent",
     model=config.model_config['name'],
     instruction=config.load_instruction_from_file("scriptwriter_agent.txt"),
+    tools=[google_search],
     output_key="generated_script"
 )
 
