@@ -2,12 +2,12 @@ from google.adk.agents import LlmAgent
 from google.adk.tools import google_search
 from .config import config
 
-# Sub agent 01: Scriptwriter Agent (now with search tools)
+# Sub agent 01: Scriptwriter Agent (with search capability)
 scriptwriter_agent = LlmAgent(
     name="scriptwriter_agent",
     model=config.model_config['name'],
     instruction=config.load_instruction_from_file("scriptwriter_agent.txt"),
-    tools=[google_search],  # Using the existing google_search tool
+    tools=[google_search],
     output_key="generated_script" # for saving results to state
 )
 
@@ -20,13 +20,20 @@ visualizer_agent = LlmAgent(
     output_key="visual_concepts" # for saving results to state
 )
 
-# Root agent that coordinates the sub-agents
+# Sub agent 03: Formatter Agent (combines script and visuals into final package)
+formatter_agent = LlmAgent(
+    name="formatter_agent",
+    model=config.model_config['name'],
+    instruction=config.load_instruction_from_file("formatter_agent.txt"),
+    output_key="formatted_output" # for saving final formatted results to state
+)
+
+# Root agent coordinates the workflow
 root_agent = LlmAgent(
     name="youtube_shorts_root_agent",
     model=config.model_config['name'],
     instruction=config.load_instruction_from_file("youtube_shorts_agent.txt"),
-    # Note: Using 'tools' parameter instead of 'agents' - check ADK documentation for correct parameter
-    tools=[],  # Will contain sub-agents when properly configured
+    sub_agents=[scriptwriter_agent, visualizer_agent, formatter_agent],
     output_key="final_output"
 )
 
